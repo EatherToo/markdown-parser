@@ -1,4 +1,5 @@
 export enum BasicType {
+  None /**            */ = 0b00000000,
   Title /**           */ = 0b00000001,
   LineBreak /**       */ = 0b00000010,
   TextBold /**        */ = 0b00000011,
@@ -15,10 +16,10 @@ export enum BasicType {
 }
 
 export interface IMarkDownElement {
-  type: BasicType
-  content: string | IMarkDownElement[]
-  No?: number // list No.
-  level?: number // list or title level
-  text?: string // link or img text
-  hoverText?: string // link or img hover text
+  type: BasicType;
+  content: string | IMarkDownElement[];
+  No?: number; // list No.
+  level?: number; // list or title level
+  text?: string; // link or img text
+  hoverText?: string; // link or img hover text
 }
