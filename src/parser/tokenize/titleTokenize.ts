@@ -7,7 +7,7 @@ export default function titleTokenize(content: string, start: number): TokenType
   let prePosition = start - 1;
   while (prePosition !== -1) {
     const char = content[prePosition];
-    if (char === '\n') {
+    if (char === '\n') {  
       break;
     }
     if (!isWhiteSpace(char)) {

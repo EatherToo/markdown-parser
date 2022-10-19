@@ -23,3 +23,12 @@ export function isWhiteSpace(char: string) {
   }
   return false;
 }
+
+export function isNumber(char: string) {
+  const code = char.charCodeAt(0);
+  if (code >= 48 && code <= 57) {
+    return true;
+  }
+
+  return false;
+}
