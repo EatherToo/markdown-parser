@@ -1,38 +1,22 @@
-import { BasicType } from '../../../types/syntax-types.type';
-import { TokenType } from '../../../types/tokenize.type';
-import { isWhiteSpace } from '../../utils/utils';
+import { Token, TokenType } from '../../../types/tokenize.type';
 
-export default function titleTokenize(content: string, start: number): TokenType {
-  // traverse forward to make sure this is a Title token start
-  let prePosition = start - 1;
-  while (prePosition !== -1) {
-    const char = content[prePosition];
-    if (char === '\n') {  
-      break;
+export default function titleTokenize(content: string, start: number, tokenList: Token[]): Token | number {
+  if (tokenList.length !== 0) {
+    const topToken = tokenList[tokenList.length - 1];
+    if (!Token.isWhiteSpaceType(topToken.type)) {
+      return start;
     }
-    if (!isWhiteSpace(char)) {
-      return {
-        originText: content[start],
-        type: BasicType.None,
-        position: start + 1,
-      };
-    }
-    prePosition--;
   }
 
   let position = start;
   let char = content[position];
-  const isContinue = () => {
-    return position < content.length;
-  };
+  if (char !== '#') {
+    return start;
+  }
   let originText = '';
-  while (char !== ' ' && isContinue()) {
+  while (char !== ' ' && position < content.length) {
     if (char !== '#') {
-      return {
-        originText: originText + char,
-        position,
-        type: BasicType.None,
-      };
+      return new Token(originText + char, position + 1, TokenType.Text);
     }
     originText += '#';
 
@@ -40,15 +24,7 @@ export default function titleTokenize(content: string, start: number): TokenType
     char = content[position];
   }
   if (char === ' ') {
-    return {
-      originText,
-      position: position + 1,
-      type: BasicType.Title,
-    };
+    return new Token(originText, position + 1, TokenType.TitlePrefix);
   }
-  return {
-    originText,
-    position: position - 1,
-    type: BasicType.None,
-  };
+  return new Token(originText + char, position - 1, TokenType.Text);
 }

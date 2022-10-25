@@ -1,7 +1,26 @@
-import { BasicType } from './syntax-types.type';
+export enum TokenType {
+  None,
+  Space,
+  LineBreak,
+  Indent,
+  Text,
+  TitlePrefix,
+  OrderedListPrefix,
+  UnorderedListPrefix,
+}
 
-export type TokenType = {
+export class Token {
   originText: string;
   position: number;
-  type: BasicType;
-};
+  type: TokenType;
+
+  constructor(originText: string, position: number, type: TokenType) {
+    this.originText = originText;
+    this.position = position;
+    this.type = type;
+  }
+  static _whiteSpaceType = [TokenType.Space, TokenType.Indent, TokenType.LineBreak];
+  static isWhiteSpaceType(t: TokenType) {
+    return Token._whiteSpaceType.includes(t);
+  }
+}
