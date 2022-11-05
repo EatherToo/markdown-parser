@@ -1,30 +1,43 @@
 import { Token, TokenType } from '../../../types/tokenize.type';
+import { isWhiteSpace } from '../../utils/utils';
+import { TokenBuffer } from './TokenBuffer';
 
-export default function titleTokenize(content: string, start: number, tokenList: Token[]): Token | number {
+/**
+ *
+ * @param tokenBuffer current possible token info
+ * @param position current char's position at document
+ * @param nextChar
+ * @param tokenList
+ * @returns {TokenBuffer}
+ */
+export default function titleTokenize(
+  tokenBuffer: TokenBuffer | null,
+  position: number,
+  tokenList: Token[],
+  nextChar?: string,
+): TokenBuffer {
   if (tokenList.length !== 0) {
+    // previous token must be a white space type,
+    // otherwise this char belong to text token type
     const topToken = tokenList[tokenList.length - 1];
     if (!Token.isWhiteSpaceType(topToken.type)) {
-      return start;
+      return new TokenBuffer('#', TokenType.Text, position);
     }
   }
+  if (!tokenBuffer) {
+    tokenBuffer = new TokenBuffer('', TokenType.TitlePrefix, position - 1);
+  }
 
-  let position = start;
-  let char = content[position];
-  if (char !== '#') {
-    return start;
+  if (tokenBuffer.type !== TokenType.TitlePrefix) {
+    return new TokenBuffer('#', TokenType.Text, position);
   }
-  let originText = '';
-  while (char !== ' ' && position < content.length) {
-    if (char !== '#') {
-      return new Token(originText + char, position + 1, TokenType.Text);
-    }
-    originText += '#';
 
-    position++;
-    char = content[position];
+  tokenBuffer.sourceText += '#';
+  tokenBuffer.position += 1;
+  // compare any space char, except a line break
+  if (nextChar && isWhiteSpace(nextChar) && nextChar !== '\n') {
+    tokenBuffer.isClose = true;
+    tokenBuffer.position += 1;
   }
-  if (char === ' ') {
-    return new Token(originText, position + 1, TokenType.TitlePrefix);
-  }
-  return new Token(originText + char, position - 1, TokenType.Text);
+  return tokenBuffer;
 }

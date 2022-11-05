@@ -1,3 +1,5 @@
+import { TokenBuffer } from '../src/parser/tokenize/TokenBuffer';
+
 export enum TokenType {
   None,
   Space,
@@ -8,6 +10,13 @@ export enum TokenType {
   OrderedListPrefix,
   UnorderedListPrefix,
 }
+
+export type TokenizeFunc = (
+  tokenBuffer: TokenBuffer | null,
+  position: number,
+  nextChar: string,
+  tokenList: Token[],
+) => TokenBuffer;
 
 export class Token {
   originText: string;
