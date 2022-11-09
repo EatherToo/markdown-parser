@@ -38,6 +38,7 @@ export default function titleTokenize(
   if (nextChar && isWhiteSpace(nextChar) && nextChar !== '\n') {
     tokenBuffer.isClose = true;
     tokenBuffer.position += 1;
+    tokenBuffer.sourceText += nextChar;
   }
   return tokenBuffer;
 }
