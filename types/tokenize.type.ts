@@ -11,12 +11,15 @@ export enum TokenType {
   UnorderedListPrefix,
 }
 
-export type TokenizeFunc = (
-  tokenBuffer: TokenBuffer | null,
-  position: number,
-  nextChar: string,
-  tokenList: Token[],
-) => TokenBuffer;
+export type TokenizeOptions = {
+  tokenBuffer: TokenBuffer | null;
+  position: number;
+  tokenList: Token[];
+  nextChar?: string;
+  currentChar: string;
+};
+
+export type TokenizeFunc = (options: TokenizeOptions) => TokenBuffer;
 
 export class Token {
   originText: string;

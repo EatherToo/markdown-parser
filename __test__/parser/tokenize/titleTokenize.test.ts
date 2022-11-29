@@ -5,31 +5,38 @@ import { Token, TokenType } from '../../../types/tokenize.type';
 describe('title tokenize test', () => {
   describe('test title token start', () => {
     it('md starts with `#`', () => {
-      const testRes = titleTokenize(null, 0, [], '#');
+      const testRes = titleTokenize({ tokenBuffer: null, position: 0, tokenList: [], currentChar: '#', nextChar: '#' });
       expect(testRes).toEqual(new TokenBuffer('#', TokenType.TitlePrefix, 0));
     });
 
     it('token buffer is TitlePrefix', () => {
       const tokenBuffer = new TokenBuffer('#', TokenType.TitlePrefix, 50);
-      const tokenRes = titleTokenize(tokenBuffer, 51, [], '#');
+      const tokenRes = titleTokenize({ tokenBuffer, position: 51, tokenList: [], currentChar: '#', nextChar: '#' });
       expect(tokenRes).toEqual(new TokenBuffer('##', TokenType.TitlePrefix, 51));
     });
 
     it('token buffer is not TitlePrefix', () => {
       const tokenBuffer = new TokenBuffer('#', TokenType.Text, 50);
-      const tokenRes = titleTokenize(tokenBuffer, 51, [], '#');
+
+      const tokenRes = titleTokenize({ tokenBuffer, position: 51, tokenList: [], currentChar: '#', nextChar: '#' });
       expect(tokenRes).toEqual(new TokenBuffer('#', TokenType.Text, 51));
     });
 
     it('token buffer closed', () => {
-      const testRes = titleTokenize(null, 0, [], ' ');
+      const testRes = titleTokenize({ tokenBuffer: null, position: 0, tokenList: [], currentChar: '#', nextChar: ' ' });
       const expectTokenBuffer = new TokenBuffer('#', TokenType.TitlePrefix, 0);
       expectTokenBuffer.position = 1;
       expectTokenBuffer.isClose = true;
       expectTokenBuffer.sourceText = '# ';
       expect(testRes).toEqual(expectTokenBuffer);
 
-      const testRes2 = titleTokenize(null, 0, [], '\t');
+      const testRes2 = titleTokenize({
+        tokenBuffer: null,
+        position: 0,
+        tokenList: [],
+        currentChar: '#',
+        nextChar: '\t',
+      });
       const expectTokenBuffer2 = new TokenBuffer('#', TokenType.TitlePrefix, 0);
       expectTokenBuffer2.position = 1;
       expectTokenBuffer2.isClose = true;
@@ -41,13 +48,15 @@ describe('title tokenize test', () => {
   describe('token list is not empty', () => {
     it('last token is white space type', () => {
       const tokenList = [new Token(' ', 10, TokenType.Space)];
-      const tokenRes = titleTokenize(null, 11, tokenList, '#');
+
+      const tokenRes = titleTokenize({ tokenBuffer: null, position: 11, tokenList, currentChar: '#', nextChar: '#' });
       expect(tokenRes).toEqual(new TokenBuffer('#', TokenType.TitlePrefix, 11));
     });
 
     it('last token is not white space type', () => {
       const tokenList = [new Token('#', 10, TokenType.Text)];
-      const tokenRes = titleTokenize(null, 11, tokenList, '#');
+
+      const tokenRes = titleTokenize({ tokenBuffer: null, position: 11, tokenList, currentChar: '#', nextChar: '#' });
       expect(tokenRes).toEqual(new TokenBuffer('#', TokenType.Text, 11));
     });
   });

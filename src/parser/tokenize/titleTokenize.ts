@@ -1,4 +1,4 @@
-import { Token, TokenType } from '../../../types/tokenize.type';
+import { Token, TokenizeFunc, TokenType } from '../../../types/tokenize.type';
 import { isWhiteSpace } from '../../utils/utils';
 import { TokenBuffer } from './TokenBuffer';
 
@@ -10,12 +10,10 @@ import { TokenBuffer } from './TokenBuffer';
  * @param tokenList
  * @returns {TokenBuffer}
  */
-export default function titleTokenize(
-  tokenBuffer: TokenBuffer | null,
-  position: number,
-  tokenList: Token[],
-  nextChar?: string,
-): TokenBuffer {
+const titleTokenize: TokenizeFunc = (options) => {
+  let tokenBuffer = options.tokenBuffer;
+  const { position, tokenList, nextChar } = options;
+
   if (tokenList.length !== 0) {
     // previous token must be a white space type,
     // otherwise this char belong to text token type
@@ -41,4 +39,5 @@ export default function titleTokenize(
     tokenBuffer.sourceText += nextChar;
   }
   return tokenBuffer;
-}
+};
+export default titleTokenize;
