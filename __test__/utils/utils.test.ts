@@ -1,6 +1,6 @@
-import { isWhiteSpace } from '../../src/utils/utils';
+import { isNumber, isWhiteSpace } from '../../src/utils/utils';
 
-describe('title tokenize test', () => {
+describe('utils test', () => {
   describe('isWhiteSpace test', () => {
     it('no char', () => {
       expect(isWhiteSpace('')).toBe(false);
@@ -32,6 +32,18 @@ describe('title tokenize test', () => {
       expect(isWhiteSpace('\\')).toBe(false);
       expect(isWhiteSpace('o')).toBe(false);
       expect(isWhiteSpace('i')).toBe(false);
+    });
+  });
+  describe('isNumber test', () => {
+    it('all single numbers', () => {
+      Array.from({ length: 10 })
+        .map((_, i) => `${i}`)
+        .forEach((num) => {
+          expect(isNumber(num)).toBe(true);
+        });
+    });
+    it('not numbers', () => {
+      expect(isNumber('w')).toBe(false);
     });
   });
 });
